@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background-color: #1e1e1e;
+            border-right: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .home-btn {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .home-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .my-id-box {
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+
+        .add-contact-section {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .add-contact-section input {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: white;
+        }
+
+        .add-contact-section button {
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-contact-section button:hover {
+            background-color: #218838;
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .contact-item:hover, .contact-item.active {
+            background-color: #3a3a3a;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .contact-id {
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        .edit-name-btn {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #181818;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background-color: #1e1e1e;
+            border-bottom: 1px solid #333;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background-color: #333;
+            color: white;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            background-color: #1e1e1e;
+            border-top: 1px solid #333;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: white;
+        }
+
+        .chat-input-area button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .chat-input-area button:hover {
+            background-color: #0056b3;
+        }
+
+        .no-chat-selected {
+            margin: auto;
+            color: #777;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="top-bar">
+            <span><strong>Messenger</strong></span>
+            <a href="brooksvij OS.html" class="home-btn">Home</a>
+        </div>
+
+        <div class="my-id-box">
+            Your ID: <strong id="myUniqueId">Generating...</strong>
+        </div>
+
+        <div class="add-contact-section">
+            <input type="text" id="contactIdInput" placeholder="Enter Friend's ID">
+            <button onclick="addContact()">Add</button>
+        </div>
+
+        <div class="contacts-list" id="contactsList">
+            <!-- Contacts show here -->
+        </div>
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header" id="chatHeader">Select a contact to start chatting</div>
+        <div class="messages-container" id="messagesContainer">
+            <div class="no-chat-selected">No chat selected</div>
+        </div>
+        <div class="chat-input-area" id="chatInputArea" style="display: none;">
+            <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate unique ID for user
+        function generateId() {
+            return 'user_' + Math.random().toString(36).substring(2, 9);
+        }
+
+        const myId = generateId();
+        document.getElementById('myUniqueId').innerText = myId;
+
+        // Data structures
+        let contacts = [];
+        let activeContactId = null;
+        let messagesMap = {}; // { contactId: [ {sender: 'me'/'them', text: '...'} ] } 
+
+        function addContact() {
+            const input = document.getElementById('contactIdInput');
+            const friendId = input.value.trim();
+
+            if (!friendId) return;
+            if (friendId === myId) {
+                alert("You cannot add your own ID.");
+                return;
+            }
+            if (contacts.some(c => c.id === friendId)) {
+                alert("Contact already added.");
+                return;
+            }
+document.body.style.cursor = "url('mouse.png'), auto";
+            const newContact = {
+                id: friendId,
+                name: friendId // Default name is the ID
+            };
+
+            contacts.push(newContact);
+            messagesMap[friendId] = [];
+            input.value = '';
+            renderContacts();
+        }
+
+        function editContactName(contactId, event) {
+            event.stopPropagation();
+            const contact = contacts.find(c => c.id === contactId);
+            if (!contact) return;
+
+            const newName = prompt("Enter new editable name for this contact:", contact.name);
+            if (newName && newName.trim() !== '') {
+                contact.name = newName.trim();
+                renderContacts();
+                if (activeContactId === contactId) {
+                    document.getElementById('chatHeader').innerText = contact.name;
+                }
+            }
+        }
+
+        function selectContact(contactId) {
+            activeContactId = contactId;
+            const contact = contacts.find(c => c.id === contactId);
+
+            document.getElementById('chatHeader').innerText = contact ? contact.name : 'Chat';
+            document.getElementById('chatInputArea').style.display = 'flex';
+            renderMessages();
+            renderContacts();
+        }
+
+        function renderContacts() {
+            const listEl = document.getElementById('contactsList');
+            listEl.innerHTML = '';
+
+            contacts.forEach(contact => {
+                const item = document.div || document.createElement('div');
+                item.className = 'contact-item' + (contact.id === activeContactId ? ' active' : '');
+                item.onclick = () => selectContact(contact.id);
+
+                item.innerHTML = `
+                    <div class="contact-info">
+                        <span class="contact-name">${contact.name}</span>
+                        <span class="contact-id">ID: ${contact.id}</span>
+                    </div>
+                    <button class="edit-name-btn" onclick="editContactName('${contact.id}', event)">Edit</button>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        function renderMessages() {
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = '';
+
+            if (!activeContactId) return;
+
+            const msgs = messagesMap[activeContactId] || [];
+            if (msgs.length === 0) {
+                container.innerHTML = `<div class="no-chat-selected">No messages yet. Say hello!</div>`;
+                return;
+            }
+
+            msgs.forEach(m => {
+

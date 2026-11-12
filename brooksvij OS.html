@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="brooksvij.png">
+<head>
+</head>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <a href="drivemadapp.html">
+       <img src="drivemadonlowad.png" class="equal-size" alt="img">
+    </a>
+    
+    <a href="clusterrushapp.html">
+       <img src="clusterrushdonlowad.png" class="equal-size" alt="img">
+    </a>
+
+     <a href="Vex3app.html">
+       <img src="Vex3donlowad.png" class="equal-size" alt="img">
+    </a>
+
+     <a href="ADOFAIapp.html">
+       <img src="ADOFAIdonlowad.png" class="equal-size" alt="img">
+    </a>
+
+     <a href="TombOfTheMaskapp.html">
+       <img src="Tombofthemas.jpeg" class="equal-size" alt="img">
+    </a>
+
+    <a href="retrobowlapp.html">
+        <img src="download.png"class="equal-size" alt="img">
+    </a>
+
+    <a href="Browser.html">
+      <img src="WIKI.jpeg" class="equal-size" alt="WKI">
+    </a>
+    <a href="message.html">
+      <img src="message.png" class="equal-size" alt="message">
+    </a>
+    <a href="AppStore.html">
+      <img src="Appstore.png" class="equal-size" alt="AI"
+    </a>
+    <a href="callender.html">
+      <img src="callender.png" class="equal-size" alt="AI"
+    </a>
+    <a href="Videoplayer.html">
+      <img src="video.jpeg" class="equal-size" alt="AI"
+    </a>
+    
+    
+    <!-- Date and Time Display Container -->
+    <div id="datetime-display"></div>
+
+    <!-- JavaScript Link or Inline Script -->
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format the date and time cleanly
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit', 
+                minute: '2-digit', 
+                
+            };
+           
+            
+            const formattedDateTime = now.toLocaleDateString('en-US', options);
+            
+            // Inject into the HTML container
+            document.getElementById('datetime-display').textContent = formattedDateTime;
+        }
+
+        // Run the function immediately when the page loads
+        updateDateTime();
+        
+        // Update the clock every 1 second (1000 milliseconds)
+        setInterval(updateDateTime, 1000);
+    </script>
+</body>
+</html>

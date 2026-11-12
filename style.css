@@ -1,0 +1,45 @@
+body {
+  background-color:black;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+
+        
+}
+img{
+border-radius:40px;
+width:100px;
+float:left;
+}
+
+a:link{
+ text-color:#000000;
+ border-color:#000000;
+ backround-color:#FFFFFF;
+ 
+}
+
+#datetime-display {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+    color: #ffffff; /* White text */
+    text-align: center;
+    padding: 10px 0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 1000; /* Keeps it on top of other elements */
+}
+.equal-size {
+  /* Set your desired uniform dimensions */
+  width: 150px;
+  height: 150px;
+  
+  /* Keeps the aspect ratio intact and crops nicely if needed */
+  object-fit: cover; 
+  
+  /* Optional: Ensures they look perfectly circular like in the image */
+  border-radius: 50%; 
+}

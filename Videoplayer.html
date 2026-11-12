@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <a href="brooksvij OS.html">Home</a>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Video Platform</title>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --card-bg: #1f1f1f;
+      --accent: #ff0050;
+      --text: #ffffff;
+      --text-muted: #aaa;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    /* Top Navigation */
+    header {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      border-bottom: 1px solid #333;
+      background: var(--card-bg);
+    }
+    .logo {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent);
+      cursor: pointer;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button, input[type="text"] {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    button:hover {
+      background: #444;
+    }
+    .btn-primary {
+      background: var(--accent);
+    }
+    .btn-primary:hover {
+      background: #e6004c;
+    }
+
+    /* Main Container Views */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      position: relative;
+      padding: 20px;
+    }
+    .view {
+      display: none;
+      height: 100%;
+    }
+    .view.active {
+      display: block;
+    }
+
+    /* Home Grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .video-card:hover {
+      transform: scale(1.02);
+    }
+    .video-card video {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .video-card-info {
+      padding: 12px;
+    }
+    .video-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+    .video-author {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Video Player View */
+    .player-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    video.main-player {
+      width: 100%;
+      max-height: 480px;
+      background: black;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .player-meta {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    /* Floating Upload Button */
+    .upload-btn {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .modal-content input, .modal-content label {
+      width: 100%;
+    }
+    .modal-content input[type="text"] {
+      background: #111;
+      border: 1px solid #444;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="logo" onclick="switchView('home')">VideoTok</div>
+    <div class="nav-buttons">
+      <button onclick="switchView('home')">Home</button>
+      <span id="userDisplay" style="font-size: 0.9rem; color: #aaa;">Guest</span>
+      <button onclick="openModal('accountModal')">Account</button>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main>
+    <!-- Home View -->
+    <section id="homeView" class="view active">
+      <div class="video-grid" id="videoGrid"></div>
+    </section>
+
+    <!-- Player View -->
+    <section id="playerView" class="view">
+      <div class="player-container">
+        <button onclick="switchView('home')" style="align-self: flex-start; margin-bottom: 10px;">← Back to Home</button>
+        <video id="mainVideoPlayer" class="main-player" controls></video>
+        <div class="player-meta">
+          <div>
+            <h2 id="playerTitle">Video Title</h2>
+            <p id="playerAuthor" style="color: #aaa; font-size: 0.9rem;">Author</p>
+          </div>
+          <button id="followBtn" class="btn-primary" onclick="toggleFollow()">Follow</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Side Floating Plus Button for Upload -->
+  <div class="upload-btn" onclick="openModal('uploadModal')" title="Upload Video">+</div>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <h3>Upload Video</h3>
+      <input type="text" id="uploadTitle" placeholder="Video Title">
+      <input type="file" id="uploadFile" accept="video/*">
+      <button class="btn-primary" onclick="handleUpload()">Post Video</button>
+      <button onclick="closeModal('uploadModal')">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Account Modal -->
+  <div id="accountModal" class="modal">
+    <div class="modal-content">
+      <h3>Your Account</h3>
+      <input type="text" id="usernameInput" placeholder="Enter your username">
+      <button class="btn-primary" onclick="saveAccount()">Save Account</button>
+      <button onclick="closeModal('accountModal')">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // State management stored in memory & localStorage
+    let currentUser = localStorage.getItem('vt_user') || 'Anonymous';
+    let videos = JSON.parse(localStorage.getItem('vt_videos')) || [
+      {
+        id: 1,
+        title: 'Sample Nature Clip',
+        author: 'NatureGuy',
+        url: 'https://w3schools.com'
+      }
+    ];
+    let followedUsers = JSON.parse(localStorage.getItem('vt_followed')) || [];
+    let currentVideo = null;
+
+    // Update UI on load
+    document.getElementById('userDisplay').innerText = currentUser;
+    renderVideos();
+
+    function switchView(viewName) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      if (viewName === 'home') {
+        document.getElementById('homeView').classList.add('active');
+        const player = document.getElementById('mainVideoPlayer');
+        player.pause();
+      } else if (viewName === 'player') {
+        document.getElementById('playerView').classList.add('active');
+      }
+    }
+
+    function renderVideos() {
+      const grid = document.getElementById('videoGrid');
+      grid.innerHTML = '';
+      videos.forEach(vid => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.onclick = () => openVideo(vid);
+        card.innerHTML = `
+          <video src="${vid.url}" muted></video>
+          <div class="video-card-info">
+            <div class="video-title">${vid.title}</div>
+            <div class="video-author">@${vid.author}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      localStorage.setItem('vt_videos', JSON.stringify(videos));
+    }
+
+    function openVideo(video) {
+      currentVideo = video;
+      document.getElementById('playerTitle').innerText = video.title;
+      document.getElementById('playerAuthor').innerText = `@${video.author}`;
+      const player = document.getElementById('mainVideoPlayer');
+      player.src = video.url;
+      player.play();
+
+      updateFollowButton();
+      switchView('player');
+    }
+
+    function handleUpload() {
+      const title = document.getElementById('uploadTitle').value.trim();
+      const fileInput = document.getElementById('uploadFile');
+      const file = fileInput.files[0];
+
+      if (!title || !file) {
+        alert('Please enter a title and select a video file.');
+        return;
+      }
+
+      const fileURL = URL.createObjectURL(file);
+      const newVideo = {
+        id: Date.now(),
+        title: title,
+        author: currentUser,
+        url: fileURL
+      };
+
+      videos.unshift(newVideo);
+      renderVideos();
+      closeModal('uploadModal');
+      document.getElementById('uploadTitle').value = '';
+      fileInput.value = '';
+    }
+
+    function toggleFollow() {
+      if (!currentVideo) return;
+      const author = currentVideo.author;
+      const index = followedUsers.indexOf(author);
+      if (index === -1) {
+        followedUsers.push(author);
+      } else {
+        followedUsers.splice(index, 1);
+      }
+      localStorage.setItem('vt_followed', JSON.stringify(followedUsers));
+      updateFollowButton();
+    }
+
+    function updateFollowButton() {
+      const btn = document.getElementById('followBtn');
+      if (!currentVideo) return;
+      const isFollowing = followedUsers.includes(currentVideo.author);
+      btn.innerText = isFollowing ? 'Following' : 'Follow';
+      btn.style.background = isFollowing ? '#555' : 'var(--accent)';
+    }
+
+    function saveAccount() {
+      const name = document.getElementById('usernameInput').value.trim();
+      if (name) {
+        currentUser = name;
+        localStorage.setItem('vt_user', currentUser);

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <body>
+      <a href="brookvij OS.html"> </a>  
+    </body>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Browser Simulator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+
+        /* Browser Toolbar UI */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            background-color: #e3e6e8;
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: #fff;
+            border: 1px solid #bbb;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .address-bar {
+            flex-grow: 1;
+            padding: 6px 12px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .address-bar:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 4px rgba(74, 144, 226, 0.4);
+        }
+
+        /* Content Window (The Iframe) */
+        .browser-content {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            background-color: #ffffff;
+        }
+
+        /* Notice Banner regarding security constraints */
+        .security-notice {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 8px;
+            text-align: center;
+            font-size: 13px;
+            border-bottom: 1px solid #ffeeba;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Controls -->
+    <div class="toolbar">
+        <a href="brooksvij OS.html">Home</a>
+        <input type="text" id="url-input" class="address-bar" value="https://wikipedia.org" onkeydown="if(event.key === 'Enter') navigate()">
+        <button class="nav-btn" onclick="navigate()">Go</button>
+    </div>
+
+    <div class="security-notice">
+        Note: Many modern websites (like Google or YouTube) block embedding inside simulations for security reasons. Try open directories like Wikipedia.
+    </div>
+
+    <!-- Webpage Viewport -->
+    <iframe id="viewport" class="browser-content" src="https://wikipedia.org"></iframe>
+
+    <script>
+        const defaultHome = "https://wikipedia.org";
+        const urlInput = document.getElementById('url-input');
+        const viewport = document.getElementById('viewport');
+
+        // Function to handle URL navigation
+        function navigate() {
+            let url = urlInput.value.trim();
+
+            // Automatically prepend https:// if missing
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+
+            urlInput.value = url;
+            viewport.src = url;
+        }
+
+        // Return to the default home screen
+        function goHome() {
+            urlInput.value = defaultHome;
+            viewport.src = defaultHome;
+        }
+    </script>
+
+</body>
+</html>
